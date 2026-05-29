@@ -4,19 +4,19 @@ namespace Commands;
 
 class ExampleCommand extends \NpConsoleCommand
 {
-    public function getHelp()
+    public function getHelp(): string
     {
         return <<<EOD
-USAGE
-example
+        USAGE
+        example
 
-DESCRIPTION
-Example command
+        DESCRIPTION
+        Example command
 
-EOD;
+        EOD;
     }
 
-    public function run($args)
+    public function run($args): void
     {
         $start = new \DateTime();
 
@@ -31,12 +31,11 @@ EOD;
 
             // Code here...
 
-            $this->showProgress($i,$total);
+            $this->showProgress($i, $total);
         }
 
         $end = new \DateTime();
         $diff = $start->diff($end);
-        echo "Time elapsed: " . $diff->format('%H:%I:%S') . "\n";
+        echo "Time elapsed: " . $diff->format("%H:%I:%S") . "\n";
     }
-
 }

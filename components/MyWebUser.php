@@ -7,11 +7,11 @@ class MyWebUser extends \CWebUser
     /** @var User */
     private $_profile = null;
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
-        if(!$this->isGuest) {
+        if (!$this->isGuest) {
             /** @var $u User */
             $u = \User::model()->findByPk($this->id);
 
@@ -19,9 +19,8 @@ class MyWebUser extends \CWebUser
         }
     }
 
-    public function getProfile()
+    public function getProfile(): ?User
     {
         return $this->_profile;
     }
-
 }

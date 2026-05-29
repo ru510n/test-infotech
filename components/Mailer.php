@@ -4,10 +4,16 @@ namespace Components;
 
 class Mailer
 {
-    public static function sendMail($params = array())
+    /**
+     * Sends an email using Yii's mail component.
+     *
+     * @param array $params The email parameters.
+     * @return mixed The result of the send operation.
+     */
+    public static function sendMail(array $params = []): mixed
     {
         /** @var $message YiiMailMessage */
-        $message = new \YiiMailMessage;
+        $message = new \YiiMailMessage();
         /*
         $base_path = Yii::getPathOfAlias('application.views.mail.images');
         $files = CFileHelper::findFiles($base_path);
@@ -20,54 +26,68 @@ class Mailer
         }
         $params['params']['imgs'] = $imgs;
         */
-        
-        $message->view = $params['view'];
-        $message->subject = $params['subject'];
-        $message->setTo($params['to']);
-        if (isset($params['cc'])) {
-            $message->setCc($params['cc']);
+
+        $message->view = $params["view"];
+        $message->subject = $params["subject"];
+        $message->setTo($params["to"]);
+        if (isset($params["cc"])) {
+            $message->setCc($params["cc"]);
         }
-        if (isset($params['bcc'])) {
-            $message->setBcc($params['bcc']);
+        if (isset($params["bcc"])) {
+            $message->setBcc($params["bcc"]);
         }
-        $message->setBody($params['params'], 'text/html');
+        $message->setBody($params["params"], "text/html");
         $message->addPart(
-            self::getPlainTextVersion($message, $params['params']),
-            'text/plain'
+            self::getPlainTextVersion($message, $params["params"]),
+            "text/plain",
         );
         $message->attachSigner(self::getSigner());
-        $message->from = \Yii::app()->params['mail_sender'];
-        
+        $message->from = \Yii::app()->params["mail_sender"];
+
         return \Yii::app()->mail->send($message);
     }
-    
-    public static function getSigner()
+
+    public static function getSigner(): \Swift_Signers_DKIMSigner
     {
-        $private = \Yii::app()->params['DKIM_Key'];
-        $domain = 'mydomain.com';
-        $selector = \Yii::app()->params['DKIM_Selector'];
-        
-        return new \Swift_Signers_DKIMSigner($private,$domain,$selector);
+        $private = \Yii::app()->params["DKIM_Key"];
+        $domain = "mydomain.com";
+        $selector = \Yii::app()->params["DKIM_Selector"];
+
+        return new \Swift_Signers_DKIMSigner($private, $domain, $selector);
     }
-    
-    public static function getPlainTextVersion($message, $params)
+
+    public static function getPlainTextVersion($message, $params): string
     {
         $path = \Yii::getPathOfAlias(\Yii::app()->mail->viewPath);
-        $plainViewPath =  $path . DIRECTORY_SEPARATOR . $message->view .'.plain.php';
-        
-        if(!file_exists($plainViewPath)) {
-            return strip_tags(strtr($message->getBody(),array("\t"=>'', '&nbsp;'=>' ','<br>'=>"\n",'<br/>'=>"\n",'<br />'=>"\n",'</p>'=>"\n\n")));    
+        $plainViewPath =
+            $path . DIRECTORY_SEPARATOR . $message->view . ".plain.php";
+
+        if (!file_exists($plainViewPath)) {
+            return strip_tags(
+                strtr($message->getBody(), [
+                    "\t" => "",
+                    "&nbsp;" => " ",
+                    "<br>" => "\n",
+                    "<br/>" => "\n",
+                    "<br />" => "\n",
+                    "</p>" => "\n\n",
+                ]),
+            );
         }
-        
-        if(isset(\Yii::app()->controller)) {
+
+        if (isset(\Yii::app()->controller)) {
             $controller = \Yii::app()->controller;
         } else {
-            $controller = new \CController('YiiMail');
+            $controller = new \CController("YiiMail");
         }
-        
+
         $body = $controller->renderInternal($plainViewPath, $params, true);
-        $footer = $controller->renderInternal($path . DIRECTORY_SEPARATOR . 'footer.plain.php', null, true);
-        
+        $footer = $controller->renderInternal(
+            $path . DIRECTORY_SEPARATOR . "footer.plain.php",
+            null,
+            true,
+        );
+
         return $body . PHP_EOL . PHP_EOL . $footer;
     }
-} 
+}
