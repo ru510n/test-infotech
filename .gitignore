@@ -2,3 +2,4 @@
 composer.lock
 /config/custom.php
 /config/params.php
+.env
