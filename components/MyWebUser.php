@@ -1,5 +1,8 @@
 <?php
-class MyWebUser extends CWebUser
+
+namespace Components;
+
+class MyWebUser extends \CWebUser
 {
     /** @var User */
     private $_profile = null;
@@ -10,7 +13,7 @@ class MyWebUser extends CWebUser
 
         if(!$this->isGuest) {
             /** @var $u User */
-            $u = User::model()->findByPk($this->id);
+            $u = \User::model()->findByPk($this->id);
 
             $this->_profile = $u;
         }

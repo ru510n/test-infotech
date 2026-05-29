@@ -30,6 +30,12 @@
     "autoload": {
         "psr-0": {
             "config": "./"
+        },
+        "psr-4": {
+            "Controllers\\": "controllers/",
+            "Components\\": "components/",
+            "Models\\Forms\\": "models/forms/",
+            "Commands\\": "commands/"
         }
     }
 }

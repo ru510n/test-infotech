@@ -1,11 +1,15 @@
 <?php
 
+namespace Models\Forms;
+
+use Components\UserIdentity;
+
 /**
  * LoginForm class.
  * LoginForm is the data structure for keeping
  * user login form data. It is used by the 'login' action of 'SiteController'.
  */
-class LoginForm extends CFormModel
+class LoginForm extends \CFormModel
 {
 	public $username;
 	public $password;
@@ -68,7 +72,7 @@ class LoginForm extends CFormModel
 		if($this->_identity->errorCode===UserIdentity::ERROR_NONE)
 		{
 			$duration=$this->rememberMe ? 3600*24*30 : 0; // 30 days
-			Yii::app()->user->login($this->_identity,$duration);
+			\Yii::app()->user->login($this->_identity,$duration);
 			return true;
 		}
 		else

@@ -1,9 +1,12 @@
 <?php
+
+namespace Components;
+
 /**
  * Controller is the customized base controller class.
  * All controller classes for this application should extend from this base class.
  */
-class Controller extends GxController
+class Controller extends \GxController
 {
 	/**
 	 * @var string the default layout for the controller view. Defaults to '//layouts/column1',
@@ -24,7 +27,7 @@ class Controller extends GxController
     protected function beforeAction($action)
     {
         $baseLayout = $this->layout;
-        if(Yii::app()->request->isAjaxRequest) {
+        if(\Yii::app()->request->isAjaxRequest) {
             $this->layout = false;
         } else {
             $this->layout = $baseLayout;
@@ -35,13 +38,13 @@ class Controller extends GxController
 
     public function handleRender($view, $params)
     {
-        if(Yii::app()->request->isAjaxRequest) {
+        if(\Yii::app()->request->isAjaxRequest) {
             $this->renderPartial($view, $params);
         } else {
             $this->render($view, $params);
         }
 
-        Yii::app()->end();
+        \Yii::app()->end();
     }
 
     public function confirm($body, $params, $confirmedUrl, $confirmedBtnLbl = 'Confirm', $ajax = false)

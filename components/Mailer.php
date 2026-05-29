@@ -1,11 +1,13 @@
 <?php
 
+namespace Components;
+
 class Mailer
 {
     public static function sendMail($params = array())
     {
         /** @var $message YiiMailMessage */
-        $message = new YiiMailMessage;
+        $message = new \YiiMailMessage;
         /*
         $base_path = Yii::getPathOfAlias('application.views.mail.images');
         $files = CFileHelper::findFiles($base_path);
@@ -34,33 +36,33 @@ class Mailer
             'text/plain'
         );
         $message->attachSigner(self::getSigner());
-        $message->from = Yii::app()->params['mail_sender'];
+        $message->from = \Yii::app()->params['mail_sender'];
         
-        return Yii::app()->mail->send($message);
+        return \Yii::app()->mail->send($message);
     }
     
     public static function getSigner()
     {
-        $private = Yii::app()->params['DKIM_Key'];
+        $private = \Yii::app()->params['DKIM_Key'];
         $domain = 'mydomain.com';
-        $selector = Yii::app()->params['DKIM_Selector'];
+        $selector = \Yii::app()->params['DKIM_Selector'];
         
-        return new Swift_Signers_DKIMSigner($private,$domain,$selector);
+        return new \Swift_Signers_DKIMSigner($private,$domain,$selector);
     }
     
     public static function getPlainTextVersion($message, $params)
     {
-        $path = Yii::getPathOfAlias(Yii::app()->mail->viewPath);
+        $path = \Yii::getPathOfAlias(\Yii::app()->mail->viewPath);
         $plainViewPath =  $path . DIRECTORY_SEPARATOR . $message->view .'.plain.php';
         
         if(!file_exists($plainViewPath)) {
             return strip_tags(strtr($message->getBody(),array("\t"=>'', '&nbsp;'=>' ','<br>'=>"\n",'<br/>'=>"\n",'<br />'=>"\n",'</p>'=>"\n\n")));    
         }
         
-        if(isset(Yii::app()->controller)) {
-            $controller = Yii::app()->controller;
+        if(isset(\Yii::app()->controller)) {
+            $controller = \Yii::app()->controller;
         } else {
-            $controller = new CController('YiiMail');
+            $controller = new \CController('YiiMail');
         }
         
         $body = $controller->renderInternal($plainViewPath, $params, true);

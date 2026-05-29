@@ -1,6 +1,8 @@
 <?php
 
-class ExampleCommand extends NpConsoleCommand
+namespace Commands;
+
+class ExampleCommand extends \NpConsoleCommand
 {
     public function getHelp()
     {
@@ -16,7 +18,7 @@ EOD;
 
     public function run($args)
     {
-        $start = new DateTime();
+        $start = new \DateTime();
 
         $limit = 10;
         $total = 500000;
@@ -32,7 +34,7 @@ EOD;
             $this->showProgress($i,$total);
         }
 
-        $end = new DateTime();
+        $end = new \DateTime();
         $diff = $start->diff($end);
         echo "Time elapsed: " . $diff->format('%H:%I:%S') . "\n";
     }

@@ -12,6 +12,7 @@ return CMap::mergeArray(
             'giix' => 'vendor.assisrafael.giix',
         ),
         'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . '..',
+        'controllerNamespace' => 'Controllers',
         'name' => 'Yii Application',
         'sourceLanguage' => 'en_us',
         'language' => 'en',
@@ -39,6 +40,18 @@ return CMap::mergeArray(
         ),
         // application components
         'components' => array(
+            'db' => array(
+                'connectionString' => sprintf(
+                    'mysql:host=%s;port=%s;dbname=%s',
+                    getenv('DB_HOST'),
+                    getenv('DB_PORT'),
+                    getenv('DB_NAME')
+                ),
+                'emulatePrepare' => true,
+                'username' => getenv('DB_USER'),
+                'password' => getenv('DB_PASS'),
+                'charset' => 'utf8mb4',
+            ),
             'coreMessages' => array(
                 'basePath' => dirname(__FILE__) . DIRECTORY_SEPARATOR . 'messages',
             ),
@@ -46,7 +59,7 @@ return CMap::mergeArray(
                 'timeout' => 60 * 60 * 24,
             ),
             'user' => array(
-                'class' => 'MyWebUser',
+                'class' => 'Components\\MyWebUser',
                 // enable cookie-based authentication
                 'allowAutoLogin' => false,
             ),
